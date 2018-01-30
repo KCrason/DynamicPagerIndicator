@@ -25,8 +25,11 @@
             android:id="@+id/dynamic_pager_indicator1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabTextColorMode="gradient"
             app:indicatorLineScrollMode="dynamic"
             app:pagerIndicatorMode="scrollable_center"
+            app:tabNormalTextColor="@color/colorPrimary"
+            app:tabSelectedTextColor="@color/colorAccent"
             />
 
         <android.support.v4.view.ViewPager

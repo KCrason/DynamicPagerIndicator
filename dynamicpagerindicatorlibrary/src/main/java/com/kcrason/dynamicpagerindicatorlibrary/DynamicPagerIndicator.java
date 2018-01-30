@@ -53,6 +53,16 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     public final static int INDICATOR_SCROLL_MODE_TRANSFORM = 2;
 
     /**
+     * tab view的文字变化模式  TAB_TEXT_COLOR_MODE_COMMON，普通模式
+     */
+    public final static int TAB_TEXT_COLOR_MODE_COMMON = 1;
+
+    /**
+     * tab view的文字变化模式  TAB_TEXT_COLOR_MODE_GRADIENT，渐变模式
+     */
+    public final static int TAB_TEXT_COLOR_MODE_GRADIENT = 1;
+
+    /**
      * 即整个指示器控件的显示模式,共有三种模式,默认为INDICATOR_MODE_FIXED
      */
     public int mPagerIndicatorMode;
@@ -81,6 +91,11 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
      * tab的选中的字体颜色
      */
     public int mTabSelectedTextColor;
+
+    /**
+     * tab color是否渐变
+     */
+    public int mTabTextColorMode;
 
     /**
      * 指示条移动的模式，共两种，默认INDICATOR_SCROLL_MODE_DYNAMIC
@@ -172,8 +187,9 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             mTabPadding = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabPadding, 30);
             mTabNormalTextColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_tabNormalTextColor, Color.parseColor("#999999"));
             mTabSelectedTextColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_tabSelectedTextColor, Color.parseColor("#2e2e37"));
-            mTabNormalTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabNormalTextSize, sp2px(18));
-            mTabSelectedTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabSelectedTextSize, sp2px(18));
+            mTabNormalTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabNormalTextSize, Utils.sp2px(mContext, 18));
+            mTabSelectedTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabSelectedTextSize, Utils.sp2px(mContext, 18));
+            mTabTextColorMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_tabTextColorMode, TAB_TEXT_COLOR_MODE_COMMON);
             mIndicatorLineHeight = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineHeight, 12);
             mIndicatorLineWidth = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineWidth, 60);
             mIndicatorLineRadius = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineRadius, 0);
@@ -187,14 +203,6 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         }
     }
 
-    /**
-     * 将sp值转换为px值
-     */
-    private int sp2px(float spValue) {
-        final float fontScale = mContext.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
-    }
-
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -205,6 +213,10 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             dynamicScrollIndicator(position, positionOffset);
         } else {
             transformScrollIndicator(position, positionOffset);
+        }
+
+        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT) {
+            tabTitleColorGradient(position, positionOffset);
         }
     }
 
@@ -254,6 +266,15 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
                 float endX = afterViewWith + positionView.getRight() - (afterViewWith - mIndicatorLineWidth) / 2;
                 mScrollableLine.updateScrollLineWidth(startX, endX, mIndicatorLineEndColor, mIndicatorLineStartColor, positionOffset);
             }
+        }
+    }
+
+    public void tabTitleColorGradient(int position, float positionOffset) {
+        PageTabView pageTabView = (PageTabView) mTabParentView.getChildAt(position);
+        PageTabView afterPageTabView = (PageTabView) mTabParentView.getChildAt(position + 1);
+        pageTabView.getTitleTextView().setTextColor(Utils.evaluateColor(mTabSelectedTextColor, mTabNormalTextColor, positionOffset));
+        if (afterPageTabView != null) {
+            afterPageTabView.getTitleTextView().setTextColor(Utils.evaluateColor(mTabNormalTextColor, mTabSelectedTextColor, positionOffset));
         }
     }
 
@@ -308,7 +329,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE) {
             int positionLeft = mTabParentView.getChildAt(position).getLeft();
             int positionWidth = mTabParentView.getChildAt(position).getWidth();
-            int halfScreenWidth = calculateScreenWidth() / 2;
+            int halfScreenWidth = Utils.calculateScreenWidth(mContext) / 2;
             if (mAutoScrollHorizontalScrollView != null) {
                 mAutoScrollHorizontalScrollView.smoothScrollTo(positionLeft + positionWidth / 2 - halfScreenWidth, 0);
             }
@@ -363,7 +384,9 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         viewPager.addOnPageChangeListener(this);
         PagerAdapter pagerAdapter = viewPager.getAdapter();
         int pageCount = pagerAdapter.getCount();
-        mTabParentView = createTabParentView(viewPager.getHeight());
+        if (mTabParentView == null) {
+            mTabParentView = createTabParentView(viewPager.getHeight());
+        }
         if (mTabParentView != null) {
             if (mTabParentView.getChildCount() > 0) {
                 mTabParentView.removeAllViews();
@@ -412,14 +435,6 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
 
 
     /**
-     * 计算屏宽度
-     */
-    public int calculateScreenWidth() {
-        return mContext.getResources().getDisplayMetrics().widthPixels;
-    }
-
-
-    /**
      * 计算第一个Item的宽度，用于当未设置Indicator的宽度时
      */
     public int calculateFirstItemWidth() {
@@ -453,7 +468,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             }
         } else {
             if (mIndicatorLineWidth == 0) {
-                mIndicatorLineWidth = calculateScreenWidth() / mTabParentView.getChildCount();
+                mIndicatorLineWidth = Utils.calculateScreenWidth(mContext) / mTabParentView.getChildCount();
             }
         }
     }
@@ -468,7 +483,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     public LinearLayout createTabParentView(int height) {
         LinearLayout linearLayout = new LinearLayout(mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER ? calculateScreenWidth() : LinearLayout.LayoutParams.MATCH_PARENT,
+                mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER ? Utils.calculateScreenWidth(mContext) : LinearLayout.LayoutParams.MATCH_PARENT,
                 height == 0 ? LinearLayout.LayoutParams.WRAP_CONTENT : height);
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.setLayoutParams(layoutParams);

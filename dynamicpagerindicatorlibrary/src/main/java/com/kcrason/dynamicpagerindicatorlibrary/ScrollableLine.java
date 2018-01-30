@@ -2,15 +2,11 @@ package com.kcrason.dynamicpagerindicatorlibrary;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.Scroller;
 
 /**
  * @author KCrason
@@ -53,6 +49,7 @@ public class ScrollableLine extends View {
 
     /**
      * 设置导航条的高度
+     *
      * @param indicatorLineHeight
      */
     public void setIndicatorLineHeight(int indicatorLineHeight) {
@@ -62,6 +59,7 @@ public class ScrollableLine extends View {
 
     /**
      * 设置导航条的圆角
+     *
      * @param indicatorLineRadius
      * @return
      */
@@ -73,36 +71,8 @@ public class ScrollableLine extends View {
     public void updateScrollLineWidth(float indicatorStartX, float indicatorEndX, int indicatorStartColor, int indicatorEndColor, float fraction) {
         this.mIndicatorStartX = indicatorStartX;
         this.mIndicatorEndX = indicatorEndX;
-        mPaint.setColor(evaluateColor(indicatorStartColor, indicatorEndColor, fraction));
+        mPaint.setColor(Utils.evaluateColor(indicatorStartColor, indicatorEndColor, fraction));
         invalidate();
-    }
-
-    /**
-     * 颜色渐变，需要把ARGB分别拆开进行渐变
-     */
-    private int evaluateColor(int startValue, int endValue, float fraction) {
-        if (fraction <= 0) {
-            return startValue;
-        }
-        if (fraction >= 1) {
-            return endValue;
-        }
-        int startInt = startValue;
-        int startA = (startInt >> 24) & 0xff;
-        int startR = (startInt >> 16) & 0xff;
-        int startG = (startInt >> 8) & 0xff;
-        int startB = startInt & 0xff;
-
-        int endInt = endValue;
-        int endA = (endInt >> 24) & 0xff;
-        int endR = (endInt >> 16) & 0xff;
-        int endG = (endInt >> 8) & 0xff;
-        int endB = endInt & 0xff;
-
-        return ((startA + (int) (fraction * (endA - startA))) << 24)
-                | ((startR + (int) (fraction * (endR - startR))) << 16)
-                | ((startG + (int) (fraction * (endG - startG))) << 8)
-                | ((startB + (int) (fraction * (endB - startB))));
     }
 
 

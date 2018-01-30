@@ -44,7 +44,7 @@ public class PagerFragment extends Fragment {
         LinearLayout parentView = view.findViewById(R.id.parent_view);
         TextView textView = view.findViewById(R.id.txt_content);
         textView.setText("This is " + mFragmentIndex + " fragment");
-        switch (mFragmentIndex){
+        switch (mFragmentIndex) {
             case 0:
                 parentView.setBackgroundColor(Color.RED);
                 break;
@@ -60,7 +60,8 @@ public class PagerFragment extends Fragment {
             case 4:
                 parentView.setBackgroundColor(Color.BLUE);
                 break;
-                default: parentView.setBackgroundColor(Color.WHITE);
+            default:
+                parentView.setBackgroundColor(Color.WHITE);
         }
     }
 }

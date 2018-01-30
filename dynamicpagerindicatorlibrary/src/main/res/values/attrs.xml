@@ -11,6 +11,10 @@
         <attr name="tabSelectedTextSize" format="dimension"/>
         <attr name="tabSelectedTextColor" format="color"/>
         <attr name="tabNormalTextColor" format="color"/>
+        <attr name="tabTextColorMode">
+            <enum name="common" value="1"/>
+            <enum name="gradient" value="2"/>
+        </attr>
         <attr name="indicatorLineHeight" format="dimension"/>
         <attr name="indicatorLineWidth" format="dimension"/>
         <attr name="indicatorLineRadius" format="dimension"/>
@@ -22,5 +26,6 @@
             <enum name="dynamic" value="1"/>
             <enum name="transform" value="2"/>
         </attr>
+
     </declare-styleable>
 </resources>

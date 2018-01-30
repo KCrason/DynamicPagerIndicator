@@ -1,10 +1,13 @@
 package com.kcrason.dynamicpagerindicator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator;
 
@@ -17,9 +20,6 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager1, mViewPager2, mViewPager3, mViewPager4;
-
-    private DynamicPagerIndicator mDynamicPagerIndicator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         CustomPagerIndicator dynamicPagerIndicator6 = findViewById(R.id.dynamic_pager_indicator6);
         setViewPagerContent(viewPager6, dynamicPagerIndicator6, 6);
     }
+
 
     private void setViewPagerContent(ViewPager viewPager, DynamicPagerIndicator dynamicPagerIndicator, int index) {
         viewPager.setAdapter(new DynamicFragmentPagerAdapter(getSupportFragmentManager(), createFragments(index)));
