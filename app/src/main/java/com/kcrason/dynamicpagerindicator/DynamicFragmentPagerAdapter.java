@@ -21,6 +21,16 @@ public class DynamicFragmentPagerAdapter extends FragmentPagerAdapter {
         this.mFragments = fragments;
     }
 
+    public void update(List<Fragment> fragments){
+        this.mFragments = fragments;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     @Override
     public Fragment getItem(int position) {
         return mFragments.get(position);

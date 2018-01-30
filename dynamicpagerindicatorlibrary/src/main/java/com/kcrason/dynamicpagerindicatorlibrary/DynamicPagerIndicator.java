@@ -376,26 +376,10 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         mOnItemTabClickListener = onItemTabClickListener;
     }
 
-    public void setViewPager(ViewPager viewPager) {
-        if (viewPager == null || viewPager.getAdapter() == null) {
-            throw new RuntimeException("viewpager or pager adapter is null");
-        }
-        this.mViewPager = viewPager;
-        viewPager.addOnPageChangeListener(this);
-        PagerAdapter pagerAdapter = viewPager.getAdapter();
-        int pageCount = pagerAdapter.getCount();
-        if (mTabParentView == null) {
-            mTabParentView = createTabParentView(viewPager.getHeight());
-        }
-        if (mTabParentView != null) {
-            if (mTabParentView.getChildCount() > 0) {
-                mTabParentView.removeAllViews();
-            }
-            for (int i = 0; i < pageCount; i++) {
-                createTabView(pagerAdapter, i);
-            }
-        }
 
+
+    public void setViewPager(ViewPager viewPager) {
+        createOrUpdateTabView(viewPager);
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE) {
             LinearLayout linearLayout = new LinearLayout(mContext);
             LinearLayout.LayoutParams linearLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -414,6 +398,28 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         } else {
             addView(mTabParentView);
             addView(addScrollableLine());
+        }
+    }
+
+
+    public void createOrUpdateTabView(ViewPager viewPager) {
+        if (viewPager == null || viewPager.getAdapter() == null) {
+            throw new RuntimeException("viewpager or pager adapter is null");
+        }
+        this.mViewPager = viewPager;
+        viewPager.addOnPageChangeListener(this);
+        PagerAdapter pagerAdapter = viewPager.getAdapter();
+        int pageCount = pagerAdapter.getCount();
+        if (mTabParentView == null) {
+            mTabParentView = createTabParentView(viewPager.getHeight());
+        }
+        if (mTabParentView != null) {
+            if (mTabParentView.getChildCount() > 0) {
+                mTabParentView.removeAllViews();
+            }
+            for (int i = 0; i < pageCount; i++) {
+                createTabView(pagerAdapter, i);
+            }
         }
     }
 

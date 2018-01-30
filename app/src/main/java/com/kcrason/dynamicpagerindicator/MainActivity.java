@@ -20,6 +20,11 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+    ViewPager viewPager2;
+
+    DynamicPagerIndicator dynamicPagerIndicator2;
+
+    DynamicFragmentPagerAdapter dynamicFragmentPagerAdapter2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,15 +32,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ViewPager viewPager1 = findViewById(R.id.view_pager1);
         DynamicPagerIndicator dynamicPagerIndicator1 = findViewById(R.id.dynamic_pager_indicator1);
-        setViewPagerContent(viewPager1, dynamicPagerIndicator1, 1);
+        setViewPagerContent(viewPager1, dynamicPagerIndicator1, 4);
 
-        ViewPager viewPager2 = findViewById(R.id.view_pager2);
-        DynamicPagerIndicator dynamicPagerIndicator2 = findViewById(R.id.dynamic_pager_indicator2);
-        setViewPagerContent(viewPager2, dynamicPagerIndicator2, 2);
+        viewPager2 = findViewById(R.id.view_pager2);
+        dynamicPagerIndicator2 = findViewById(R.id.dynamic_pager_indicator2);
+        setViewPagerContent();
 
         ViewPager viewPager3 = findViewById(R.id.view_pager3);
         DynamicPagerIndicator dynamicPagerIndicator3 = findViewById(R.id.dynamic_pager_indicator3);
-        setViewPagerContent(viewPager3, dynamicPagerIndicator3, 3);
+        setViewPagerContent(viewPager3, dynamicPagerIndicator3, 4);
 
         ViewPager viewPager4 = findViewById(R.id.view_pager4);
         DynamicPagerIndicator dynamicPagerIndicator4 = findViewById(R.id.dynamic_pager_indicator4);
@@ -43,11 +48,34 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPager viewPager5 = findViewById(R.id.view_pager5);
         CustomPagerIndicator dynamicPagerIndicator5 = findViewById(R.id.dynamic_pager_indicator5);
-        setViewPagerContent(viewPager5, dynamicPagerIndicator5, 5);
+        setViewPagerContent(viewPager5, dynamicPagerIndicator5, 4);
 
         ViewPager viewPager6 = findViewById(R.id.view_pager6);
         CustomPagerIndicator dynamicPagerIndicator6 = findViewById(R.id.dynamic_pager_indicator6);
-        setViewPagerContent(viewPager6, dynamicPagerIndicator6, 6);
+        setViewPagerContent(viewPager6, dynamicPagerIndicator6, 4);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.update) {
+            dynamicFragmentPagerAdapter2.update(createFragments(4));
+            dynamicPagerIndicator2.createOrUpdateTabView(viewPager2);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void setViewPagerContent() {
+        dynamicFragmentPagerAdapter2 = new DynamicFragmentPagerAdapter(getSupportFragmentManager(), createFragments(10));
+        viewPager2.setAdapter(dynamicFragmentPagerAdapter2);
+        dynamicPagerIndicator2.setViewPager(viewPager2);
     }
 
 
@@ -58,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Fragment> createFragments(int index) {
         List<Fragment> fragments = new ArrayList<>();
-        for (int i = 0; i < (index == 2 ? 12 : 4); i++) {
+        for (int i = 0; i < index; i++) {
             fragments.add(PagerFragment.create(i));
         }
         return fragments;
