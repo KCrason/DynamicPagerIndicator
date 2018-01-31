@@ -63,7 +63,7 @@ dynamicPagerIndicator.setViewPager(viewPager);
 
 #### 四、自定义TabView(即自定义指示器的Item的样式)
 1、创建一个类继承`PagerTabView`，重写`initPagerTabView()`方法去将自定义的`View`加入`PagerTabView`。并复写`getTitleTextView()`返回自定义`View`的`TextView`（该`TextView`用于显示指示器的标题，必不可少）。
-```
+```java
 public class CustomPagerTabView extends PageTabView {
 
     private TextView mTextView;
@@ -92,7 +92,7 @@ public class CustomPagerTabView extends PageTabView {
 }
 ```
 2、创建一个类继承`DynamicPagerIndicator`并重写`createTabView()`。在`createTabView()`创建自定义的`PagerTabView`并将其设置给`DynamicPagerIndicator`。
-```
+```java
 public class CustomPagerIndicator extends DynamicPagerIndicator {
 
     public CustomPagerIndicator(Context context) {
@@ -116,7 +116,7 @@ public class CustomPagerIndicator extends DynamicPagerIndicator {
 }
 ```
 3、在xml中使用自定义的`CustomPagerIndicator`，属性设置和`DynamicPagerIndicator`无区别。
-```
+```java
   <com.kcrason.dynamicpagerindicator.CustomPagerIndicator
             android:id="@+id/dynamic_pager_indicator5"
             android:layout_width="match_parent"
@@ -140,7 +140,7 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
 ```
 
 2、设置ViewPager的监听，由于DynamicPagerIndicator内部已经设置了ViewPager的监听，所以外部如果需要ViewPager的监听，需要用到新的接口`OnOutPageChangeListener`。
-```
+```java
         dynamicPagerIndicator.setOnOutPageChangeListener(new DynamicPagerIndicator.OnOutPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
