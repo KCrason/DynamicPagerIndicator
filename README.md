@@ -127,6 +127,57 @@ public class CustomPagerIndicator extends DynamicPagerIndicator {
             app:pagerIndicatorMode="fixed"
             />
 ```
+#### 设置监听
+
+1、设置单个TabView点击监听：通过DynamicPagerIndicator的对象设置`OnItemTabClickListener`即可。
+```java
+dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItemTabClickListener() {
+            @Override
+            public void onItemTabClick(int position) {
+                Toast.makeText(this, "you click " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+```
+
+2、设置ViewPager的监听，由于DynamicPagerIndicator内部已经设置了ViewPager的监听，所以外部如果需要ViewPager的监听，需要用到新的接口`OnOutPageChangeListener`。
+```
+        dynamicPagerIndicator.setOnOutPageChangeListener(new DynamicPagerIndicator.OnOutPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        
+        或者通过实现内部静态类
+        
+        dynamicPagerIndicator1.setOnOutPageChangeListener(new DynamicPagerIndicator.SimpleOnOutPageChangeListener(){
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+        });
+```
+
 #### 版本更新 
 
 ##### 1.0.3
