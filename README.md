@@ -127,7 +127,15 @@ public class CustomPagerIndicator extends DynamicPagerIndicator {
             app:pagerIndicatorMode="fixed"
             />
 ```
-#### 版本更新 1.0.2
+#### 版本更新 
+
+##### 1.0.3
+
+- 增加`pagerIndicatorScrollToCenterMode`模式选择,意为导航条滚动居中的模式。该模式只针对`pagerIndicatorMode=scrollable`时有效。共有两种，第一种为linkage(联动模式)：滑动页面时，整个导航栏同步移动到居中的位置。第二种为transaction(异动模式)：滑动页面完整后，才将需要居中显示的栏目滑动的居中的位置。
+
+- 修改更新`TabView`数量的方法为`updateTabView()`,不再使用`createOrUpdateTabView(ViewPager viewpager)`去更新`TabView`的数量。
+
+##### 1.0.2
 
 - 增加`tabTextColorMode`模式选择，共有两种。第一种为`common`，即普通文字变化模式。第二种为`gradient`，即从未选中的颜色渐变到选中的颜色。
 
