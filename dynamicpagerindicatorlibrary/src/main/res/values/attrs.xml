@@ -6,6 +6,10 @@
             <enum name="fixed" value="2"/>
             <enum name="scrollable_center" value="3"/>
         </attr>
+        <attr name="pagerIndicatorScrollToCenterMode">
+            <enum name="linkage" value="1"/>
+            <enum name="transaction" value="2"/>
+        </attr>
         <attr name="tabPadding" format="dimension"/>
         <attr name="tabNormalTextSize" format="dimension"/>
         <attr name="tabSelectedTextSize" format="dimension"/>
@@ -26,6 +30,7 @@
             <enum name="dynamic" value="1"/>
             <enum name="transform" value="2"/>
         </attr>
+
 
     </declare-styleable>
 </resources>

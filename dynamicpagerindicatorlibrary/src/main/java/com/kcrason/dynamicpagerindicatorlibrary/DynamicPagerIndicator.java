@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -60,12 +61,28 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     /**
      * tab view的文字变化模式  TAB_TEXT_COLOR_MODE_GRADIENT，渐变模式
      */
-    public final static int TAB_TEXT_COLOR_MODE_GRADIENT = 1;
+    public final static int TAB_TEXT_COLOR_MODE_GRADIENT = 2;
+
+    /**
+     * 指示器滑动到居中位置的方式，PAGER_INDICATOR_SCROLL_MODE_SYNC ，联动模式，跟随页面一起移动到居中位置
+     */
+    public final static int PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_LINKAGE = 1;
+    /**
+     * 指示器滑动到居中位置的方式，PAGER_INDICATOR_SCROLL_MODE_SYNC ，异动模式，等页面滑动完成，再将对应的TabView移动到居中位置
+     */
+    public final static int PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_TRANSACTION = 2;
 
     /**
      * 即整个指示器控件的显示模式,共有三种模式,默认为INDICATOR_MODE_FIXED
      */
     public int mPagerIndicatorMode;
+
+    /**
+     * 即指示器的滚动模式，该模式只有当mPagerIndicatorMode = INDICATOR_MODE_SCROLLABLE有效。
+     * 共有两种，第一种是滑动页面时，整个导航栏同步移动到居中的位置，用PAGER_INDICATOR_SCROLL_MODE_SYNC标识
+     * 第一种是滑动页面完整后，才将需要居中显示的栏目滑动的居中的位置。用PAGER_INDICATOR_SCROLL_MODE_ASYNC标识
+     */
+    public int mPagerIndicatorScrollToCenterMode;
 
     /**
      * tab的padding,内边距,默认30px
@@ -199,24 +216,8 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             mIndicatorLineMarginTop = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineMarginTop, 8);
             mIndicatorLineMarginBottom = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineMarginBottom, 8);
             mPagerIndicatorMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_pagerIndicatorMode, INDICATOR_MODE_FIXED);
+            mPagerIndicatorScrollToCenterMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_pagerIndicatorScrollToCenterMode, PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_LINKAGE);
             typedArray.recycle();
-        }
-    }
-
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (mOnOutPageChangeListener != null) {
-            mOnOutPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
-        }
-        if (mIndicatorLineScrollMode == INDICATOR_SCROLL_MODE_DYNAMIC) {
-            dynamicScrollIndicator(position, positionOffset);
-        } else {
-            transformScrollIndicator(position, positionOffset);
-        }
-
-        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT) {
-            tabTitleColorGradient(position, positionOffset);
         }
     }
 
@@ -278,6 +279,27 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         }
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (mOnOutPageChangeListener != null) {
+            mOnOutPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+        }
+        if (mIndicatorLineScrollMode == INDICATOR_SCROLL_MODE_DYNAMIC) {
+            dynamicScrollIndicator(position, positionOffset);
+        } else {
+            transformScrollIndicator(position, positionOffset);
+        }
+
+        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT) {
+            tabTitleColorGradient(position, positionOffset);
+        }
+
+        if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE &&
+                mPagerIndicatorScrollToCenterMode == PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_LINKAGE) {
+            linkageScrollTitleParentToCenter(position, positionOffset);
+        }
+    }
+
 
     @Override
     public void onPageSelected(int position) {
@@ -285,8 +307,9 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             mOnOutPageChangeListener.onPageSelected(position);
         }
         updateTitleStyle(position);
-        if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE) {
-            scrollTitleParentToCenter(position);
+        if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE &&
+                mPagerIndicatorScrollToCenterMode == PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_TRANSACTION) {
+            transactionScrollTitleParentToCenter(position);
         }
     }
 
@@ -323,16 +346,37 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
 
 
     /**
-     * INDICATOR_MODE_SCROLLABLE模式下，滑动条目居中显示
+     * INDICATOR_MODE_SCROLLABLE 模式下，滑动条目居中显示
+     * 移动模式居中显示当前的条目
      */
-    public void scrollTitleParentToCenter(int position) {
-        if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE) {
-            int positionLeft = mTabParentView.getChildAt(position).getLeft();
-            int positionWidth = mTabParentView.getChildAt(position).getWidth();
-            int halfScreenWidth = Utils.calculateScreenWidth(mContext) / 2;
-            if (mAutoScrollHorizontalScrollView != null) {
-                mAutoScrollHorizontalScrollView.smoothScrollTo(positionLeft + positionWidth / 2 - halfScreenWidth, 0);
-            }
+    public void transactionScrollTitleParentToCenter(int position) {
+        final int positionLeft = mTabParentView.getChildAt(position).getLeft();
+        final int positionWidth = mTabParentView.getChildAt(position).getWidth();
+        final int halfScreenWidth = Utils.calculateScreenWidth(mContext) / 2;
+        if (mAutoScrollHorizontalScrollView != null) {
+            mAutoScrollHorizontalScrollView.smoothScrollTo(positionLeft + positionWidth / 2 - halfScreenWidth, 0);
+        }
+    }
+
+
+    /**
+     * INDICATOR_MODE_SCROLLABLE 模式下，滑动条目居中显示
+     * 联动模式居中显示当前的条目
+     */
+    public void linkageScrollTitleParentToCenter(int position, float positionOffset) {
+        View positionView = mTabParentView.getChildAt(position);
+        View afterView = mTabParentView.getChildAt(position + 1);
+        int positionRight = positionView.getRight();
+        int positionWidth = positionView.getWidth();
+        int afterViewWidth = 0;
+        if (afterView != null) {
+            afterViewWidth = afterView.getWidth();
+        }
+        final int halfScreenWidth = Utils.calculateScreenWidth(mContext) / 2;
+        int offsetStart = positionRight - positionWidth / 2 - halfScreenWidth;
+        int scrollX = (int) ((afterViewWidth / 2 + positionWidth / 2) * positionOffset) + offsetStart;
+        if (mAutoScrollHorizontalScrollView != null) {
+            mAutoScrollHorizontalScrollView.scrollTo(scrollX, 0);
         }
     }
 
@@ -377,9 +421,25 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     }
 
 
-
     public void setViewPager(ViewPager viewPager) {
-        createOrUpdateTabView(viewPager);
+        if (viewPager == null || viewPager.getAdapter() == null) {
+            throw new RuntimeException("viewpager or pager adapter is null");
+        }
+        this.mViewPager = viewPager;
+        viewPager.addOnPageChangeListener(this);
+        PagerAdapter pagerAdapter = viewPager.getAdapter();
+        int pageCount = pagerAdapter.getCount();
+        if (mTabParentView == null) {
+            mTabParentView = createTabParentView(viewPager.getHeight());
+        }
+        if (mTabParentView != null) {
+            if (mTabParentView.getChildCount() > 0) {
+                mTabParentView.removeAllViews();
+            }
+            for (int i = 0; i < pageCount; i++) {
+                createTabView(pagerAdapter, i);
+            }
+        }
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE) {
             LinearLayout linearLayout = new LinearLayout(mContext);
             LinearLayout.LayoutParams linearLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -402,17 +462,12 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     }
 
 
-    public void createOrUpdateTabView(ViewPager viewPager) {
-        if (viewPager == null || viewPager.getAdapter() == null) {
-            throw new RuntimeException("viewpager or pager adapter is null");
+    public void updateTabView() {
+        if (mViewPager == null) {
+            throw new RuntimeException("You need to initialization ViewPager!");
         }
-        this.mViewPager = viewPager;
-        viewPager.addOnPageChangeListener(this);
-        PagerAdapter pagerAdapter = viewPager.getAdapter();
+        PagerAdapter pagerAdapter = mViewPager.getAdapter();
         int pageCount = pagerAdapter.getCount();
-        if (mTabParentView == null) {
-            mTabParentView = createTabParentView(viewPager.getHeight());
-        }
         if (mTabParentView != null) {
             if (mTabParentView.getChildCount() > 0) {
                 mTabParentView.removeAllViews();

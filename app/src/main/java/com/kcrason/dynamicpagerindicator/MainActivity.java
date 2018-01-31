@@ -1,6 +1,5 @@
 package com.kcrason.dynamicpagerindicator;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -65,15 +64,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update) {
-            dynamicFragmentPagerAdapter2.update(createFragments(4));
-            dynamicPagerIndicator2.createOrUpdateTabView(viewPager2);
+            dynamicFragmentPagerAdapter2.update(createFragments(10));
+            dynamicPagerIndicator2.updateTabView();
+            viewPager2.setCurrentItem(0);
         }
         return super.onOptionsItemSelected(item);
     }
 
 
     private void setViewPagerContent() {
-        dynamicFragmentPagerAdapter2 = new DynamicFragmentPagerAdapter(getSupportFragmentManager(), createFragments(10));
+        dynamicFragmentPagerAdapter2 = new DynamicFragmentPagerAdapter(getSupportFragmentManager(), createFragments(14));
         viewPager2.setAdapter(dynamicFragmentPagerAdapter2);
         dynamicPagerIndicator2.setViewPager(viewPager2);
     }
