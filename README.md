@@ -180,6 +180,11 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
 
 #### 版本更新 
 
+##### 1.0.4
+
+- 修复若干bug。
+- 修改Indicator数量动态更新问题。
+
 ##### 1.0.3
 
 - 增加`pagerIndicatorScrollToCenterMode`模式选择,意为导航条滚动居中的模式。该模式只针对`pagerIndicatorMode=scrollable`时有效。共有两种，第一种为linkage(联动模式)：滑动页面时，整个导航栏同步移动到居中的位置。第二种为transaction(异动模式)：滑动页面完整后，才将需要居中显示的栏目滑动的居中的位置。
