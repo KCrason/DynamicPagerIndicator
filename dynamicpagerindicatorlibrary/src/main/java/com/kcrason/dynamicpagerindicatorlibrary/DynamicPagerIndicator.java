@@ -3,10 +3,10 @@ package com.kcrason.dynamicpagerindicatorlibrary;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.pdf.PdfDocument;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -421,25 +421,14 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     }
 
 
+
     public void setViewPager(ViewPager viewPager) {
         if (viewPager == null || viewPager.getAdapter() == null) {
             throw new RuntimeException("viewpager or pager adapter is null");
         }
         this.mViewPager = viewPager;
         viewPager.addOnPageChangeListener(this);
-        PagerAdapter pagerAdapter = viewPager.getAdapter();
-        int pageCount = pagerAdapter.getCount();
-        if (mTabParentView == null) {
-            mTabParentView = createTabParentView(viewPager.getHeight());
-        }
-        if (mTabParentView != null) {
-            if (mTabParentView.getChildCount() > 0) {
-                mTabParentView.removeAllViews();
-            }
-            for (int i = 0; i < pageCount; i++) {
-                createTabView(pagerAdapter, i);
-            }
-        }
+        updateIndicator();
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE) {
             LinearLayout linearLayout = new LinearLayout(mContext);
             LinearLayout.LayoutParams linearLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -461,22 +450,36 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         }
     }
 
-
-    public void updateTabView() {
+    public void updateIndicator() {
         if (mViewPager == null) {
-            throw new RuntimeException("You need to initialization ViewPager!");
+            return;
         }
         PagerAdapter pagerAdapter = mViewPager.getAdapter();
         int pageCount = pagerAdapter.getCount();
-        if (mTabParentView != null) {
-            if (mTabParentView.getChildCount() > 0) {
-                mTabParentView.removeAllViews();
+        if (mTabParentView == null) {
+            mTabParentView = createTabParentView();
+        }
+        int oldCount = mTabParentView.getChildCount();
+        if (oldCount > pageCount) {
+            mTabParentView.removeViews(pageCount, oldCount - pageCount);
+        }
+        for (int i = 0; i < pageCount; i++) {
+            boolean isOldChild = i < oldCount;
+            View childView;
+            if (isOldChild) {
+                childView = mTabParentView.getChildAt(i);
+            } else {
+                childView = createTabView(pagerAdapter, i);
             }
-            for (int i = 0; i < pageCount; i++) {
-                createTabView(pagerAdapter, i);
+            if (childView instanceof PageTabView) {
+                setTabTitleTextView(((PageTabView) childView).getTitleTextView(), i, pagerAdapter);
+                setTabViewLayoutParams((PageTabView) childView, i);
+            } else {
+                throw new IllegalArgumentException("childView must be PageTabView");
             }
         }
     }
+
 
 
     /**
@@ -538,14 +541,12 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     /**
      * 创建TabView的父控件，用于装载TabView
      *
-     * @param height tabParentView的高度，与DynamicPagerIndicator的高度一致
      * @return tabParentView
      */
-    public LinearLayout createTabParentView(int height) {
+    public LinearLayout createTabParentView() {
         LinearLayout linearLayout = new LinearLayout(mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER ? Utils.calculateScreenWidth(mContext) : LinearLayout.LayoutParams.MATCH_PARENT,
-                height == 0 ? LinearLayout.LayoutParams.WRAP_CONTENT : height);
+                mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER ? Utils.calculateScreenWidth(mContext) : LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.setLayoutParams(layoutParams);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -557,16 +558,18 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
      * 设置一个TextView，用于显示标题，这是必不可少的一个View
      */
     public void setTabTitleTextView(TextView textView, int position, PagerAdapter pagerAdapter) {
-        if (position == 0) {
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabSelectedTextSize);
-            textView.setTextColor(mTabSelectedTextColor);
-        } else {
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabNormalTextSize);
-            textView.setTextColor(mTabNormalTextColor);
+        if (textView != null) {
+            if (position == 0) {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabSelectedTextSize);
+                textView.setTextColor(mTabSelectedTextColor);
+            } else {
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabNormalTextSize);
+                textView.setTextColor(mTabNormalTextColor);
+            }
+            textView.setGravity(Gravity.CENTER);
+            String title = pagerAdapter.getPageTitle(position).toString();
+            textView.setText(title);
         }
-        textView.setGravity(Gravity.CENTER);
-        String title = pagerAdapter.getPageTitle(position).toString();
-        textView.setText(title);
     }
 
     /**
@@ -592,15 +595,16 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
                 }
             }
         });
-        mTabParentView.addView(pageTabView);
+        //如果沒有被添加过，则添加
+        if (pageTabView.getParent() == null) {
+            mTabParentView.addView(pageTabView);
+        }
     }
 
     /**
      * 创建tab view
      */
-    public void createTabView(PagerAdapter pagerAdapter, final int position) {
-        PageTabView pageTabView = new PageTabView(mContext);
-        setTabTitleTextView(pageTabView.getTitleTextView(), position, pagerAdapter);
-        setTabViewLayoutParams(pageTabView, position);
+    public View createTabView(PagerAdapter pagerAdapter, final int position) {
+        return new PageTabView(mContext);
     }
 }

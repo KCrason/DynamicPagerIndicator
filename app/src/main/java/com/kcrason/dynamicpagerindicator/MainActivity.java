@@ -1,6 +1,7 @@
 package com.kcrason.dynamicpagerindicator;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -31,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ViewPager viewPager1 = findViewById(R.id.view_pager1);
         DynamicPagerIndicator dynamicPagerIndicator1 = findViewById(R.id.dynamic_pager_indicator1);
-        setViewPagerContent(viewPager1, dynamicPagerIndicator1, 4);
+        setViewPagerContent(viewPager1, dynamicPagerIndicator1, 2);
 
         viewPager2 = findViewById(R.id.view_pager2);
         dynamicPagerIndicator2 = findViewById(R.id.dynamic_pager_indicator2);
+
         setViewPagerContent();
 
         ViewPager viewPager3 = findViewById(R.id.view_pager3);
@@ -64,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update) {
-            dynamicFragmentPagerAdapter2.update(createFragments(10));
-            dynamicPagerIndicator2.updateTabView();
+            dynamicFragmentPagerAdapter2.update(createFragments(3));
+            dynamicPagerIndicator2.updateIndicator();
             viewPager2.setCurrentItem(0);
         }
         return super.onOptionsItemSelected(item);
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setViewPagerContent(ViewPager viewPager, DynamicPagerIndicator dynamicPagerIndicator, int index) {
+    private void setViewPagerContent(final ViewPager viewPager, final DynamicPagerIndicator dynamicPagerIndicator, final int index) {
         viewPager.setAdapter(new DynamicFragmentPagerAdapter(getSupportFragmentManager(), createFragments(index)));
         dynamicPagerIndicator.setViewPager(viewPager);
     }

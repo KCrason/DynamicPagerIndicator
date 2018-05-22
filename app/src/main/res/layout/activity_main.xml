@@ -24,12 +24,17 @@
         <com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator
             android:id="@+id/dynamic_pager_indicator1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabTextColorMode="common"
+            android:layout_height="48dp"
             app:indicatorLineScrollMode="dynamic"
+            app:indicatorLineHeight="10dp"
+            app:indicatorLineRadius="2dp"
+            app:indicatorLineWidth="16dip"
             app:pagerIndicatorMode="scrollable_center"
-            app:tabNormalTextColor="@color/colorPrimary"
-            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabNormalTextColor="#999999"
+            app:tabNormalTextSize="16sp"
+            app:tabSelectedTextColor="#fff4ce46"
+            app:tabSelectedTextSize="16sp"
+            app:tabTextColorMode="gradient"
             />
 
         <android.support.v4.view.ViewPager
@@ -55,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:indicatorLineEndColor="@color/colorPrimary"
-            app:indicatorLineScrollMode="dynamic"
+            app:indicatorLineScrollMode="transform"
             app:pagerIndicatorScrollToCenterMode="linkage"
             app:indicatorLineStartColor="@color/colorAccent"
             app:pagerIndicatorMode="scrollable"

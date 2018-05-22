@@ -3,6 +3,7 @@ package com.kcrason.dynamicpagerindicator;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator;
 
@@ -25,9 +26,7 @@ public class CustomPagerIndicator extends DynamicPagerIndicator {
     }
 
     @Override
-    public void createTabView(PagerAdapter pagerAdapter, final int position) {
-        CustomPagerTabView customPagerTabView = new CustomPagerTabView(mContext);
-        setTabTitleTextView(customPagerTabView.getTitleTextView(), position, pagerAdapter);
-        setTabViewLayoutParams(customPagerTabView, position);
+    public View createTabView(PagerAdapter pagerAdapter, final int position) {
+        return new CustomPagerTabView(mContext);
     }
 }
