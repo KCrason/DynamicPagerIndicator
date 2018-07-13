@@ -12,21 +12,21 @@ import android.widget.TextView;
  * @author KCrason
  * @date 2018/1/23
  */
-public class PageTabView extends LinearLayout {
+public class PagerTabView extends LinearLayout {
 
     private TextView mTextView;
 
-    public PageTabView(Context context) {
+    public PagerTabView(Context context) {
         super(context);
         initPagerTabView(context);
     }
 
-    public PageTabView(Context context, @Nullable AttributeSet attrs) {
+    public PagerTabView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPagerTabView(context);
     }
 
-    public PageTabView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public PagerTabView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initPagerTabView(context);
     }

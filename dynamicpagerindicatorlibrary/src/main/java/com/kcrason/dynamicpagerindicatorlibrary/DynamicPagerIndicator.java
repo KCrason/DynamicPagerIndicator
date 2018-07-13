@@ -3,7 +3,6 @@ package com.kcrason.dynamicpagerindicatorlibrary;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.pdf.PdfDocument;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -180,6 +179,12 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
      */
     public HorizontalScrollView mAutoScrollHorizontalScrollView;
 
+
+    /**
+     * 当前position
+     */
+    private int mCurrentPosition;
+
     public DynamicPagerIndicator(Context context) {
         super(context);
         initDynamicPagerIndicator(context, null);
@@ -271,11 +276,15 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     }
 
     public void tabTitleColorGradient(int position, float positionOffset) {
-        PageTabView pageTabView = (PageTabView) mTabParentView.getChildAt(position);
-        PageTabView afterPageTabView = (PageTabView) mTabParentView.getChildAt(position + 1);
-        pageTabView.getTitleTextView().setTextColor(Utils.evaluateColor(mTabSelectedTextColor, mTabNormalTextColor, positionOffset));
-        if (afterPageTabView != null) {
-            afterPageTabView.getTitleTextView().setTextColor(Utils.evaluateColor(mTabNormalTextColor, mTabSelectedTextColor, positionOffset));
+        if (mTabParentView != null && position < mTabParentView.getChildCount()) {
+            PagerTabView pageTabView = (PagerTabView) mTabParentView.getChildAt(position);
+            if (pageTabView != null) {
+                pageTabView.getTitleTextView().setTextColor(Utils.evaluateColor(mTabSelectedTextColor, mTabNormalTextColor, positionOffset));
+            }
+            PagerTabView afterPageTabView = (PagerTabView) mTabParentView.getChildAt(position + 1);
+            if (afterPageTabView != null) {
+                afterPageTabView.getTitleTextView().setTextColor(Utils.evaluateColor(mTabNormalTextColor, mTabSelectedTextColor, positionOffset));
+            }
         }
     }
 
@@ -290,7 +299,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             transformScrollIndicator(position, positionOffset);
         }
 
-        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT) {
+        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT && mCurrentPosition == position) {
             tabTitleColorGradient(position, positionOffset);
         }
 
@@ -303,6 +312,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
+        this.mCurrentPosition = position;
         if (mOnOutPageChangeListener != null) {
             mOnOutPageChangeListener.onPageSelected(position);
         }
@@ -387,8 +397,8 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
         }
         for (int i = 0; i < mTabParentView.getChildCount(); i++) {
             View childView = mTabParentView.getChildAt(i);
-            if (childView instanceof PageTabView) {
-                TextView textView = ((PageTabView) childView).getTitleTextView();
+            if (childView instanceof PagerTabView) {
+                TextView textView = ((PagerTabView) childView).getTitleTextView();
                 if (textView != null) {
                     if (position == i) {
                         textView.setTextColor(mTabSelectedTextColor);
@@ -419,7 +429,6 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     public void setOnItemTabClickListener(OnItemTabClickListener onItemTabClickListener) {
         mOnItemTabClickListener = onItemTabClickListener;
     }
-
 
 
     public void setViewPager(ViewPager viewPager) {
@@ -471,15 +480,14 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             } else {
                 childView = createTabView(pagerAdapter, i);
             }
-            if (childView instanceof PageTabView) {
-                setTabTitleTextView(((PageTabView) childView).getTitleTextView(), i, pagerAdapter);
-                setTabViewLayoutParams((PageTabView) childView, i);
+            if (childView instanceof PagerTabView) {
+                setTabTitleTextView(((PagerTabView) childView).getTitleTextView(), i, pagerAdapter);
+                setTabViewLayoutParams((PagerTabView) childView, i);
             } else {
                 throw new IllegalArgumentException("childView must be PageTabView");
             }
         }
     }
-
 
 
     /**
@@ -575,7 +583,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
     /**
      * 设置tabView的layoutParams和点击监听，该TabView可以是任何一个View，但是必须包含一个TextView用于显示title
      */
-    public void setTabViewLayoutParams(PageTabView pageTabView, final int position) {
+    public void setTabViewLayoutParams(PagerTabView pageTabView, final int position) {
         LinearLayout.LayoutParams layoutParams;
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE || mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER) {
             layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -605,6 +613,6 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
      * 创建tab view
      */
     public View createTabView(PagerAdapter pagerAdapter, final int position) {
-        return new PageTabView(mContext);
+        return new PagerTabView(mContext);
     }
 }
