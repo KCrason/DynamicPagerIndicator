@@ -13,6 +13,7 @@ import com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 /**
  * @author KCrason
@@ -54,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager6 = findViewById(R.id.view_pager6);
         CustomPagerIndicator dynamicPagerIndicator6 = findViewById(R.id.dynamic_pager_indicator6);
         setViewPagerContent(viewPager6, dynamicPagerIndicator6, 4);
+
+
+        ViewPager viewPager7 = findViewById(R.id.view_pager7);
+        DynamicPagerIndicator dynamicPagerIndicator7 = findViewById(R.id.dynamic_pager_indicator7);
+        setViewPagerContent(viewPager7, dynamicPagerIndicator7, 5);
     }
 
 

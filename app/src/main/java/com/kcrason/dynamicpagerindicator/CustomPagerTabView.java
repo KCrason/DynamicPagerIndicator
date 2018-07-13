@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.kcrason.dynamicpagerindicatorlibrary.PageTabView;
+import com.kcrason.dynamicpagerindicatorlibrary.PagerTabView;
 
 /**
  * @author KCrason
  * @date 2018/1/23
  */
-public class CustomPagerTabView extends PageTabView {
+public class CustomPagerTabView extends PagerTabView {
 
     private TextView mTextView;
 

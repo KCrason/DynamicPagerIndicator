@@ -187,5 +187,39 @@
             android:layout_width="match_parent"
             android:layout_height="200dip"
             />
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="自定义7"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:id="@+id/dynamic_pager_indicator7"
+            app:indicatorLineEndColor="#f4ce46"
+            app:indicatorLineHeight="3dp"
+            app:indicatorLineRadius="2dp"
+            app:indicatorLineStartColor="#f4ce46"
+            app:tabNormalTextColor="#fc5555"
+            app:tabSelectedTextColor="#199d64"
+            app:tabNormalTextSize="16sp"
+            app:tabSelectedTextSize="16sp"
+            app:tabTextColorMode="gradient"
+            />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager7"
+            android:layout_width="match_parent"
+            android:layout_height="200dip"
+            />
     </LinearLayout>
 </ScrollView>
