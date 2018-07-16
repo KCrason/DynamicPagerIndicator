@@ -1,14 +1,16 @@
 # DynamicPagerIndicator
 仿爱奇艺/腾讯视频ViewPager导航条实现，支持自定义导航条高度，宽度，颜色变化，字体大小变化。支持多种滚动模式，支持自定义每个TabView的样式。
 
+[Demo体验：app-debug.apk](https://github.com/KCrason/DynamicPagerIndicator/blob/master/app/apk/app-debug.apk)
+
 ![dynamic.gif](http://upload-images.jianshu.io/upload_images/1860505-c4fcaaee373ce931.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 一、如何引入DynamicPagerIndicator？
 ```
 在module的build.gradle 添加:
-compile 'com.kcrason:dynamicpagerindicator:1.0.5'
+compile 'com.kcrason:dynamicpagerindicator:1.0.6'
 3.0以上gradle版本为：
-implementation 'com.kcrason:dynamicpagerindicator:1.0.5'
+implementation 'com.kcrason:dynamicpagerindicator:1.0.6'
 ```
 #### 二、如何使用？
 1、将DynamicPagerIndicator 添加到指定xml
@@ -180,7 +182,7 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
 
 #### 版本更新 
 
-##### 1.0.5
+##### 1.0.6
 
 - 修复某些情况下tab字体颜色出现不一致的情况。
 
