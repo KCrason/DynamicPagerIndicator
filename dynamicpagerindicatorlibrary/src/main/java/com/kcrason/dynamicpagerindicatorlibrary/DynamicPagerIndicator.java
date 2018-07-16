@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -290,6 +291,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
         if (mOnOutPageChangeListener != null) {
             mOnOutPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
         }
@@ -299,7 +301,7 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
             transformScrollIndicator(position, positionOffset);
         }
 
-        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT && mCurrentPosition == position) {
+        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT && mCurrentPosition == position + Math.round(positionOffset)) {
             tabTitleColorGradient(position, positionOffset);
         }
 
@@ -307,6 +309,8 @@ public class DynamicPagerIndicator extends LinearLayout implements ViewPager.OnP
                 mPagerIndicatorScrollToCenterMode == PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_LINKAGE) {
             linkageScrollTitleParentToCenter(position, positionOffset);
         }
+
+
     }
 
 
