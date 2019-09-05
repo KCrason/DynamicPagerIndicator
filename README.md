@@ -8,9 +8,9 @@
 #### 一、如何引入DynamicPagerIndicator？
 ```
 在module的build.gradle 添加:
-compile 'com.kcrason:dynamicpagerindicator:1.0.6'
+compile 'com.kcrason:dynamicpagerindicator:1.1.0'
 3.0以上gradle版本为：
-implementation 'com.kcrason:dynamicpagerindicator:1.0.6'
+implementation 'com.kcrason:dynamicpagerindicator:1.1.0'
 ```
 #### 二、如何使用？
 1、将DynamicPagerIndicator 添加到指定xml
@@ -181,6 +181,11 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
 ```
 
 #### 版本更新 
+
+#### 1.1.0
+- 添加是否显示为粗体
+- 添加字体滑动大小过程渐变。
+- 修复部分bug,优化使用体验。
 
 ##### 1.0.6
 
