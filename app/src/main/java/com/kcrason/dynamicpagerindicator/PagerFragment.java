@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 /**
  * @author KCrason
  * @date 2018/1/21
@@ -43,7 +45,7 @@ public class PagerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         LinearLayout parentView = view.findViewById(R.id.parent_view);
         TextView textView = view.findViewById(R.id.txt_content);
-        textView.setText("This is " + mFragmentIndex + " fragment");
+        textView.setText(String.format(Locale.CHINA, "This is %d fragment", mFragmentIndex));
         switch (mFragmentIndex) {
             case 0:
                 parentView.setBackgroundColor(Color.RED);

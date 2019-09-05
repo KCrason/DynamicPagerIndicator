@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kcrason.dynamicpagerindicatorlibrary.BasePagerTabView;
 import com.kcrason.dynamicpagerindicatorlibrary.PagerTabView;
 
 /**
  * @author KCrason
  * @date 2018/1/23
  */
-public class CustomPagerTabView extends PagerTabView {
+public class CustomPagerTabView extends BasePagerTabView {
 
     private TextView mTextView;
 
@@ -30,14 +31,14 @@ public class CustomPagerTabView extends PagerTabView {
     }
 
     @Override
-    public TextView getTitleTextView() {
-        return mTextView;
+    public View onCreateTabView(Context context) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.tab_view, this, false);
+        mTextView = view.findViewById(R.id.title);
+        return view;
     }
 
     @Override
-    public void initPagerTabView(Context context) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.tab_view, this, false);
-        mTextView = view.findViewById(R.id.title);
-        addView(view);
+    public TextView getTabTextView() {
+        return mTextView;
     }
 }

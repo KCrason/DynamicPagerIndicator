@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update) {
             dynamicFragmentPagerAdapter2.update(createFragments(3));
-            dynamicPagerIndicator2.updateIndicator();
+            dynamicPagerIndicator2.updateIndicator(true);
             viewPager2.setCurrentItem(0);
         }
         return super.onOptionsItemSelected(item);

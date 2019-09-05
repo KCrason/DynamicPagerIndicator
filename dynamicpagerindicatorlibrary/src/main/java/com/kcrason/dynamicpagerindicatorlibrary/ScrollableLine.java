@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+
 /**
  * @author KCrason
  * @date 2018/1/21
@@ -44,6 +45,8 @@ public class ScrollableLine extends View {
 
     private void initScrollableLine(Context context) {
         mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setStyle(Paint.Style.FILL);
         mRectF = new RectF();
     }
 
@@ -71,8 +74,8 @@ public class ScrollableLine extends View {
     public void updateScrollLineWidth(float indicatorStartX, float indicatorEndX, int indicatorStartColor, int indicatorEndColor, float fraction) {
         this.mIndicatorStartX = indicatorStartX;
         this.mIndicatorEndX = indicatorEndX;
-        mPaint.setColor(Utils.evaluateColor(indicatorStartColor, indicatorEndColor, fraction));
-        invalidate();
+        mPaint.setColor(Utils.evaluateColor(indicatorStartColor,indicatorEndColor,fraction));
+        postInvalidate();
     }
 
 

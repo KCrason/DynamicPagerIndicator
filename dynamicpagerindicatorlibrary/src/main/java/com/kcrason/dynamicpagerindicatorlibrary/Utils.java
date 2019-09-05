@@ -16,6 +16,18 @@ public class Utils {
         return (int) (spValue * fontScale + 0.5f);
     }
 
+    /**
+     * dip转px
+     */
+    public static int dipToPx(Context context, float dip) {
+        return (int) (dip * context.getResources().getDisplayMetrics().density + 0.5f);
+    }
+
+
+    public static int getScreenPixWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
 
     /**
      * 计算屏宽度

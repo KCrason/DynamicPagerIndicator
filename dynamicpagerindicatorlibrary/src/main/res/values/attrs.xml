@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="DynamicPagerIndicator">
         <attr name="pagerIndicatorMode">
-            <enum name="scrollable" value="1"/>
-            <enum name="fixed" value="2"/>
-            <enum name="scrollable_center" value="3"/>
+            <enum name="scrollable" value="1" />
+            <enum name="fixed" value="2" />
+            <enum name="scrollable_center" value="3" />
         </attr>
         <attr name="pagerIndicatorScrollToCenterMode">
-            <enum name="linkage" value="1"/>
-            <enum name="transaction" value="2"/>
+            <enum name="linkage" value="1" />
+            <enum name="transaction" value="2" />
         </attr>
-        <attr name="tabPadding" format="dimension"/>
-        <attr name="tabNormalTextSize" format="dimension"/>
-        <attr name="tabSelectedTextSize" format="dimension"/>
-        <attr name="tabSelectedTextColor" format="color"/>
-        <attr name="tabNormalTextColor" format="color"/>
+        <attr name="tabPadding" format="dimension" />
+        <attr name="tabPaddingTop" format="dimension" />
+        <attr name="tabPaddingBottom" format="dimension" />
+        <attr name="tabNormalTextSize" format="dimension" />
+        <attr name="tabSelectedTextSize" format="dimension" />
+        <attr name="tabSelectedTextColor" format="color" />
+        <attr name="tabNormalTextColor" format="color" />
         <attr name="tabTextColorMode">
-            <enum name="common" value="1"/>
-            <enum name="gradient" value="2"/>
+            <enum name="common" value="1" />
+            <enum name="gradient" value="2" />
         </attr>
-        <attr name="indicatorLineHeight" format="dimension"/>
-        <attr name="indicatorLineWidth" format="dimension"/>
-        <attr name="indicatorLineRadius" format="dimension"/>
-        <attr name="indicatorLineStartColor" format="color"/>
-        <attr name="indicatorLineEndColor" format="color"/>
-        <attr name="indicatorLineMarginTop" format="dimension"/>
-        <attr name="indicatorLineMarginBottom" format="dimension"/>
+        <attr name="indicatorLineHeight" format="dimension" />
+        <attr name="indicatorLineWidth" format="dimension" />
+        <attr name="indicatorLineRadius" format="dimension" />
+        <attr name="indicatorLineStartColor" format="color" />
+        <attr name="indicatorLineEndColor" format="color" />
+        <attr name="indicatorLineMarginTop" format="dimension" />
+        <attr name="indicatorLineMarginBottom" format="dimension" />
         <attr name="indicatorLineScrollMode">
-            <enum name="dynamic" value="1"/>
-            <enum name="transform" value="2"/>
+            <enum name="dynamic" value="1" />
+            <enum name="transform" value="2" />
         </attr>
+
+        <attr name="isTabNormalTextBold" format="boolean" />
+        <attr name="isTabSelectedTextBold" format="boolean" />
 
 
     </declare-styleable>
