@@ -29,6 +29,9 @@
         <attr name="indicatorLineEndColor" format="color" />
         <attr name="indicatorLineMarginTop" format="dimension" />
         <attr name="indicatorLineMarginBottom" format="dimension" />
+        <attr name="indicatorLineMarginLeft" format="dimension" />
+        <attr name="indicatorLineMarginRight" format="dimension" />
+
         <attr name="indicatorLineScrollMode">
             <enum name="dynamic" value="1" />
             <enum name="transform" value="2" />

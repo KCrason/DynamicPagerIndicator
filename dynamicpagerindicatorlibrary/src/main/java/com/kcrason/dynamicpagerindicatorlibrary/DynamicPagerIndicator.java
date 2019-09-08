@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -55,14 +56,25 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
     public final static int INDICATOR_SCROLL_MODE_TRANSFORM = 2;
 
     /**
-     * tab view的文字变化模式  TAB_TEXT_COLOR_MODE_COMMON，普通模式
+     * tab view的文字颜色变化模式  TAB_TEXT_COLOR_MODE_COMMON，普通模式
      */
     public final static int TAB_TEXT_COLOR_MODE_COMMON = 1;
 
     /**
-     * tab view的文字变化模式  TAB_TEXT_COLOR_MODE_GRADIENT，渐变模式
+     * tab view的文字颜色变化模式  TAB_TEXT_COLOR_MODE_GRADIENT，渐变模式
      */
     public final static int TAB_TEXT_COLOR_MODE_GRADIENT = 2;
+
+
+    /**
+     * tab view的文字字体变化模式  TAB_TEXT_SIZE_MODE_COMMON，普通模式
+     */
+    public final static int TAB_TEXT_SIZE_MODE_COMMON = 1;
+
+    /**
+     * tab view的文字字体变化模式  TAB_TEXT_SIZE_MODE_GRADIENT，渐变模式
+     */
+    public final static int TAB_TEXT_SIZE_MODE_GRADIENT = 2;
 
     /**
      * 指示器滑动到居中位置的方式，PAGER_INDICATOR_SCROLL_MODE_SYNC ，联动模式，跟随页面一起移动到居中位置
@@ -128,6 +140,11 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
      * tab color是否渐变
      */
     public int mTabTextColorMode;
+
+    /**
+     * tab size是否渐变
+     */
+    public int mTabTextSizeMode;
 
     /**
      * 指示条移动的模式，共两种，默认INDICATOR_SCROLL_MODE_DYNAMIC
@@ -213,7 +230,7 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
         this.mContext = context;
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.DynamicPagerIndicator);
         if (typedArray != null) {
-            mTabPadding = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabPadding, 30);
+            mTabPadding = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabPadding, Utils.dipToPx(mContext, 16));
             mTabPaddingBottom = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabPaddingBottom, 0);
             mTabPaddingTop = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabPaddingTop, 0);
             mTabNormalTextColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_tabNormalTextColor, Color.parseColor("#999999"));
@@ -222,17 +239,22 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
             isTabSelectedTextBold = typedArray.getBoolean(R.styleable.DynamicPagerIndicator_isTabSelectedTextBold, false);
             mTabNormalTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabNormalTextSize, Utils.sp2px(mContext, 18));
             mTabSelectedTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabSelectedTextSize, Utils.sp2px(mContext, 18));
+
             mTabTextColorMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_tabTextColorMode, TAB_TEXT_COLOR_MODE_COMMON);
-            mIndicatorLineHeight = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineHeight, 12);
-            mIndicatorLineWidth = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineWidth, 80);
+
+            mIndicatorLineHeight = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineHeight, Utils.dipToPx(mContext, 4));
+            mIndicatorLineWidth = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineWidth, Utils.dipToPx(mContext, 60));
             mIndicatorLineRadius = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineRadius, 0);
             mIndicatorLineScrollMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_indicatorLineScrollMode, INDICATOR_SCROLL_MODE_DYNAMIC);
             mIndicatorLineStartColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_indicatorLineStartColor, Color.parseColor("#f4ce46"));
             mIndicatorLineEndColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_indicatorLineEndColor, Color.parseColor("#ff00ff"));
             mIndicatorLineMarginTop = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineMarginTop, 0);
             mIndicatorLineMarginBottom = (int) typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineMarginBottom, 0);
+
             mPagerIndicatorMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_pagerIndicatorMode, INDICATOR_MODE_FIXED);
             mPagerIndicatorScrollToCenterMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_pagerIndicatorScrollToCenterMode, PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_LINKAGE);
+            mTabTextSizeMode =
+                    (mTabNormalTextSize == mTabSelectedTextSize) ? TAB_TEXT_SIZE_MODE_COMMON : TAB_TEXT_SIZE_MODE_GRADIENT;
             typedArray.recycle();
         }
     }
@@ -302,11 +324,28 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
         if (mTabParentView != null && position < mTabParentView.getChildCount()) {
             BasePagerTabView basePagerTabView = (BasePagerTabView) mTabParentView.getChildAt(position);
             if (basePagerTabView != null) {
-                basePagerTabView.getTabTextView().setTextColor(Utils.evaluateColor(mTabSelectedTextColor, mTabNormalTextColor, positionOffset));
+                int color = Utils.evaluateColor(mTabSelectedTextColor, mTabNormalTextColor, positionOffset);
+                basePagerTabView.getTabTextView().setTextColor(color);
             }
             BasePagerTabView afterPageTabView = (BasePagerTabView) mTabParentView.getChildAt(position + 1);
             if (afterPageTabView != null) {
-                afterPageTabView.getTabTextView().setTextColor(Utils.evaluateColor(mTabNormalTextColor, mTabSelectedTextColor, positionOffset));
+                int color = Utils.evaluateColor(mTabNormalTextColor, mTabSelectedTextColor, positionOffset);
+                afterPageTabView.getTabTextView().setTextColor(color);
+            }
+        }
+    }
+
+    public void tabTitleSizeGradient(int position, float positionOffset) {
+        if (mTabParentView != null && position < mTabParentView.getChildCount()) {
+            BasePagerTabView basePagerTabView = (BasePagerTabView) mTabParentView.getChildAt(position);
+            if (basePagerTabView != null) {
+                int textSize = (int) (mTabSelectedTextSize - (Math.abs(mTabSelectedTextSize - mTabNormalTextSize) * positionOffset));
+                basePagerTabView.getTabTextView().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+            }
+            BasePagerTabView afterPageTabView = (BasePagerTabView) mTabParentView.getChildAt(position + 1);
+            if (afterPageTabView != null) {
+                int textSize = (int) (Math.abs(mTabSelectedTextSize - mTabNormalTextSize) * positionOffset + mTabNormalTextSize);
+                afterPageTabView.getTabTextView().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             }
         }
     }
@@ -322,8 +361,16 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
             transformScrollIndicator(position, positionOffset);
         }
 
-        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT && mCurrentPosition == position + Math.round(positionOffset)) {
+        if (mTabTextColorMode == TAB_TEXT_COLOR_MODE_GRADIENT) {
             tabTitleColorGradient(position, positionOffset);
+        }
+
+        if (mTabTextSizeMode == TAB_TEXT_SIZE_MODE_GRADIENT) {
+            tabTitleSizeGradient(position, positionOffset);
+        }
+
+        if (mCurrentPosition == position && positionOffset == 0) {
+            updateTitleStyle(position);
         }
 
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE &&
@@ -340,7 +387,7 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
         if (mOnOutPageChangeListener != null) {
             mOnOutPageChangeListener.onPageSelected(position);
         }
-        updateTitleStyle(position);
+//        updateTitleStyle(position);
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE &&
                 mPagerIndicatorScrollToCenterMode == PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_TRANSACTION) {
             transactionScrollTitleParentToCenter(position);
@@ -522,6 +569,7 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
 
             LinearLayout linearLayout = new LinearLayout(mContext);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.addView(relativeLayout);
 
             mAutoScrollHorizontalScrollView.addView(linearLayout);
@@ -603,12 +651,11 @@ public class DynamicPagerIndicator extends RelativeLayout implements ViewPager.O
      */
     public LinearLayout createTabParentView() {
         LinearLayout linearLayout = new LinearLayout(mContext);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER || mPagerIndicatorMode == INDICATOR_MODE_FIXED) ?
                         LinearLayout.LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         linearLayout.setGravity(mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE_CENTER ? Gravity.CENTER : Gravity.CENTER_VERTICAL);
-        layoutParams.weight = 1;
         linearLayout.setLayoutParams(layoutParams);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         return linearLayout;

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 
@@ -74,7 +75,7 @@ public class ScrollableLine extends View {
     public void updateScrollLineWidth(float indicatorStartX, float indicatorEndX, int indicatorStartColor, int indicatorEndColor, float fraction) {
         this.mIndicatorStartX = indicatorStartX;
         this.mIndicatorEndX = indicatorEndX;
-        mPaint.setColor(Utils.evaluateColor(indicatorStartColor,indicatorEndColor,fraction));
+        mPaint.setColor(Utils.evaluateColor(indicatorStartColor, indicatorEndColor, fraction));
         postInvalidate();
     }
 

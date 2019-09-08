@@ -58,12 +58,19 @@
         <com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator
             android:id="@+id/dynamic_pager_indicator2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+
+            app:tabNormalTextColor="@color/colorAccent"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            app:tabTextColorMode="gradient"
+
+            app:tabNormalTextSize="16sp"
+            app:tabSelectedTextSize="20sp"
+
             app:indicatorLineEndColor="@color/colorPrimary"
-            app:indicatorLineScrollMode="transform"
-            app:pagerIndicatorScrollToCenterMode="linkage"
             app:indicatorLineStartColor="@color/colorAccent"
             app:pagerIndicatorMode="scrollable"
+            app:indicatorLineWidth="40dp"
             />
 
         <android.support.v4.view.ViewPager
