@@ -18,6 +18,7 @@ public abstract class BasePagerTabView extends LinearLayout implements IPagerTab
         init();
     }
 
+
     public BasePagerTabView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
