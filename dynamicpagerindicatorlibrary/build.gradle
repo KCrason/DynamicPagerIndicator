@@ -30,7 +30,7 @@ publish {
     userOrg = 'kcrason'//bintray中的用户名
     groupId = 'com.kcrason'//根地址，一般是com.用户名
     artifactId = 'dynamicpagerindicator'//library名称
-    publishVersion = '1.1.0'//版本号，更新Library的时候只需要增加版本号即可。
+    publishVersion = '1.2.0'//版本号，更新Library的时候只需要增加版本号即可。
     desc = 'dynamic viewpager indicator for android'//描述，这个随意
     //website：项目地址，一般项目都会上传github,这里给github的地址即可
     website = 'https://github.com/KCrason/DynamicPagerIndicator'
