@@ -59,14 +59,11 @@
             android:id="@+id/dynamic_pager_indicator2"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-
             app:tabNormalTextColor="@color/colorAccent"
             app:tabSelectedTextColor="@color/colorPrimary"
             app:tabTextColorMode="gradient"
-
             app:tabNormalTextSize="16sp"
             app:tabSelectedTextSize="20sp"
-
             app:indicatorLineEndColor="@color/colorPrimary"
             app:indicatorLineStartColor="@color/colorAccent"
             app:pagerIndicatorMode="scrollable"
