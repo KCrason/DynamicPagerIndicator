@@ -18,6 +18,7 @@ public class CustomPagerTabView extends BasePagerTabView {
 
     private TextView mTextView;
 
+
     public CustomPagerTabView(Context context) {
         super(context);
     }
