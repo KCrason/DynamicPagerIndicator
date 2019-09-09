@@ -5,14 +5,14 @@
 
 ![dynamic.gif](http://upload-images.jianshu.io/upload_images/1860505-c4fcaaee373ce931.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#### 一、如何引入DynamicPagerIndicator？
+### 一、如何引入DynamicPagerIndicator？
 ```
 在module的build.gradle 添加:
 compile 'com.kcrason:dynamicpagerindicator:1.2.0'
 3.0以上gradle版本为：
 implementation 'com.kcrason:dynamicpagerindicator:1.2.0'
 ```
-#### 二、如何使用？
+### 二、如何使用？
 1、将DynamicPagerIndicator 添加到指定xml
 ```
 <com.kcrason.dynamicpagerindicatorlibrary.DynamicPagerIndicator
@@ -29,7 +29,7 @@ ViewPager viewPager = findViewById(R.id.view_pager);
 DynamicPagerIndicator dynamicPagerIndicator = findViewById(R.id.dynamic_pager_indicator);
 dynamicPagerIndicator.setViewPager(viewPager);
 ```
-#### 三、属性说明
+### 三、属性说明
 - `pagerIndicatorMode : 指示器的显示模式，共有三种。`
 `1、scrollable：适用于ViewPager的count较多时。可滑动。默认从左向右排列显示`
 `2、scrollable_center：居中显示，适用于ViewPager的count较少时，且需要居中显示`
@@ -63,7 +63,7 @@ dynamicPagerIndicator.setViewPager(viewPager);
 `1、dynamic：即爱奇艺/腾讯视频那种可变化长度的效果。导航条长度、位置均变化。`
 `2、transform：普通移动效果，导航条长度不变，位置变化。`
 
-#### 四、自定义TabView(即自定义指示器的Item的样式)
+### 四、自定义TabView(即自定义指示器的Item的样式)
 1、创建一个类继承`PagerTabView`，重写`initPagerTabView()`方法去将自定义的`View`加入`PagerTabView`。并复写`getTitleTextView()`返回自定义`View`的`TextView`（该`TextView`用于显示指示器的标题，必不可少）。
 ```java
 public class CustomPagerTabView extends BasePagerTabView {
@@ -128,7 +128,7 @@ public class CustomPagerIndicator extends DynamicPagerIndicator {
             app:pagerIndicatorMode="fixed"
             />
 ```
-#### 设置监听
+### 设置监听
 
 1、设置单个TabView点击监听：通过DynamicPagerIndicator的对象设置`OnItemTabClickListener`即可。
 ```java
@@ -179,7 +179,11 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
         });
 ```
 
-#### 版本更新 
+### 注意事项
+- 务必先给viewPager设置adapter之后再将ViewPager对象设置给DynamicPagerIndicator
+
+
+### 版本更新 
 
 #### 1.2.0
 - 修复部分bug。
