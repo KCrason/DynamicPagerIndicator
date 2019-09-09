@@ -8,9 +8,9 @@
 #### 一、如何引入DynamicPagerIndicator？
 ```
 在module的build.gradle 添加:
-compile 'com.kcrason:dynamicpagerindicator:1.1.0'
+compile 'com.kcrason:dynamicpagerindicator:1.2.0'
 3.0以上gradle版本为：
-implementation 'com.kcrason:dynamicpagerindicator:1.1.0'
+implementation 'com.kcrason:dynamicpagerindicator:1.2.0'
 ```
 #### 二、如何使用？
 1、将DynamicPagerIndicator 添加到指定xml
@@ -66,30 +66,31 @@ dynamicPagerIndicator.setViewPager(viewPager);
 #### 四、自定义TabView(即自定义指示器的Item的样式)
 1、创建一个类继承`PagerTabView`，重写`initPagerTabView()`方法去将自定义的`View`加入`PagerTabView`。并复写`getTitleTextView()`返回自定义`View`的`TextView`（该`TextView`用于显示指示器的标题，必不可少）。
 ```java
-public class CustomPagerTabView extends PageTabView {
+public class CustomPagerTabView extends BasePagerTabView {
 
     private TextView mTextView;
 
-    public CustomPagerTabView(Context context) {
+    public PagerTabView(Context context) {
         super(context);
     }
 
-    .....省略部分构造方法....
+    public PagerTabView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-    /**
-     *自定义PagerTabView必须复写该方法返回一个TextView用于显示标题
-     * @return
-     */
+    public PagerTabView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
     @Override
-    public TextView getTitleTextView() {
+    public TextView getTabTextView() {
         return mTextView;
     }
 
     @Override
-    public void initPagerTabView(Context context) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.tab_view, this, false);
-        mTextView = view.findViewById(R.id.title);
-        addView(view);
+    public View onCreateTabView(Context context) {
+        mTextView = new TextView(context);
+        return mTextView;
     }
 }
 ```
@@ -109,11 +110,9 @@ public class CustomPagerIndicator extends DynamicPagerIndicator {
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    public void createTabView(PagerAdapter pagerAdapter, final int position) {
-        CustomPagerTabView customPagerTabView = new CustomPagerTabView(mContext);
-        setTabTitleTextView(customPagerTabView.getTitleTextView(), position, pagerAdapter);
-        setTabViewLayoutParams(customPagerTabView, position);
+   @Override
+    public BasePagerTabView createTabView(PagerAdapter pagerAdapter, final int position) {
+        return new CustomPagerTabView(mContext);
     }
 }
 ```
@@ -181,6 +180,9 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
 ```
 
 #### 版本更新 
+
+#### 1.2.0
+- 修复部分bug。
 
 #### 1.1.0
 - 添加是否显示为粗体
