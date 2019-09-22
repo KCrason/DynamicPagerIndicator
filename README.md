@@ -8,9 +8,9 @@
 ### 一、如何引入DynamicPagerIndicator？
 ```
 在module的build.gradle 添加:
-compile 'com.kcrason:dynamicpagerindicator:1.2.0'
+compile 'com.kcrason:dynamicpagerindicator:1.3.0'
 3.0以上gradle版本为：
-implementation 'com.kcrason:dynamicpagerindicator:1.2.0'
+implementation 'com.kcrason:dynamicpagerindicator:1.3.0'
 ```
 ### 二、如何使用？
 1、将DynamicPagerIndicator 添加到指定xml
@@ -44,6 +44,8 @@ dynamicPagerIndicator.setViewPager(viewPager);
 - `tabNormalTextColor：其为TabView中Title的文字正常状态文字颜色。`
 
 - `tabSelectedTextColor：其为TabView中Title的文字选中状态文字颜色。`
+
+- `tabTextColorMode/tabTextSizeMode：其为TabView的Title文字颜色和字体变化模式，共两中：common：普通变化；gradient：渐变模式。 `
 
 - `indicatorLineHeight：其为TabView下的导航条的高度。`
 
@@ -185,7 +187,7 @@ dynamicPagerIndicator.setOnItemTabClickListener(new DynamicPagerIndicator.OnItem
 
 ### 版本更新 
 
-#### 1.2.0
+#### 1.3.0
 - 修复部分bug。
 
 #### 1.1.0
