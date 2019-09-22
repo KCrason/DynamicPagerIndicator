@@ -22,6 +22,10 @@
             <enum name="common" value="1" />
             <enum name="gradient" value="2" />
         </attr>
+        <attr name="tabTextSizeMode">
+            <enum name="common" value="1" />
+            <enum name="gradient" value="2" />
+        </attr>
         <attr name="indicatorLineHeight" format="dimension" />
         <attr name="indicatorLineWidth" format="dimension" />
         <attr name="indicatorLineRadius" format="dimension" />

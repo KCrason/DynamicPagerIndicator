@@ -202,18 +202,17 @@ open class DynamicPagerIndicator @JvmOverloads constructor(
         mTabNormalTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabNormalTextSize, Utils.sp2px(context, 18f).toFloat())
         mTabSelectedTextSize = typedArray.getDimension(R.styleable.DynamicPagerIndicator_tabSelectedTextSize, Utils.sp2px(context, 18f).toFloat())
         mTabTextColorMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_tabTextColorMode, TAB_TEXT_COLOR_MODE_COMMON)
+        mTabTextSizeMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_tabTextSizeMode, TAB_TEXT_SIZE_MODE_COMMON)
         mIndicatorLineHeight = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineHeight, Utils.dipToPx(context, 4f).toFloat()).toInt()
-        mIndicatorLineWidth = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineWidth, Utils.dipToPx(context, 60f).toFloat()).toInt()
+        mIndicatorLineWidth = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineWidth, Utils.dipToPx(context, 40f).toFloat()).toInt()
         mIndicatorLineRadius = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineRadius, 0f)
         mIndicatorLineScrollMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_indicatorLineScrollMode, INDICATOR_SCROLL_MODE_DYNAMIC)
         mIndicatorLineStartColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_indicatorLineStartColor, Color.parseColor("#f4ce46"))
         mIndicatorLineEndColor = typedArray.getColor(R.styleable.DynamicPagerIndicator_indicatorLineEndColor, Color.parseColor("#ff00ff"))
         mIndicatorLineMarginTop = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineMarginTop, 0f).toInt()
         mIndicatorLineMarginBottom = typedArray.getDimension(R.styleable.DynamicPagerIndicator_indicatorLineMarginBottom, 0f).toInt()
-
         mPagerIndicatorMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_pagerIndicatorMode, INDICATOR_MODE_FIXED)
         mPagerIndicatorScrollToCenterMode = typedArray.getInt(R.styleable.DynamicPagerIndicator_pagerIndicatorScrollToCenterMode, PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_LINKAGE)
-        mTabTextSizeMode = if (mTabNormalTextSize == mTabSelectedTextSize) TAB_TEXT_SIZE_MODE_COMMON else TAB_TEXT_SIZE_MODE_GRADIENT
         typedArray.recycle()
     }
 
@@ -336,7 +335,7 @@ open class DynamicPagerIndicator @JvmOverloads constructor(
         if (mOnOutPageChangeListener != null) {
             mOnOutPageChangeListener!!.onPageSelected(position)
         }
-        //        updateTitleStyle(position);
+        updateTitleStyle(position)
         if (mPagerIndicatorMode == INDICATOR_MODE_SCROLLABLE && mPagerIndicatorScrollToCenterMode == PAGER_INDICATOR_SCROLL_TO_CENTER_MODE_TRANSACTION) {
             transactionScrollTitleParentToCenter(position)
         }
