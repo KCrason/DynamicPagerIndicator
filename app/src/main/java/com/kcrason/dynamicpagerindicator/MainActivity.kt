@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity() {
 
         viewPager2 = findViewById(R.id.view_pager2)
         dynamicPagerIndicator2 = findViewById(R.id.dynamic_pager_indicator2)
+        dynamicPagerIndicator2?.setOnOutPageChangeListener(object : DynamicPagerIndicator.SimpleOnOutPageChangeListener() {
+
+        })
 
         setViewPagerContent()
 

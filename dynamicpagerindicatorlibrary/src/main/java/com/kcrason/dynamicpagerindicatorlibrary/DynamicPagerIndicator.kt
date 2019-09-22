@@ -389,7 +389,7 @@ open class DynamicPagerIndicator @JvmOverloads constructor(
         this.mOnOutPageChangeListener = onOutPageChangeListener
     }
 
-    class SimpleOnOutPageChangeListener : OnOutPageChangeListener {
+    open class SimpleOnOutPageChangeListener : OnOutPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             // This space for rent
 
